@@ -7,4 +7,4 @@ About: 		A multifunctional driver for oled displays,
 		that you can use easy with several microcontrollers.
 #############################################################################*/
 
-
+#include "oled.h"
