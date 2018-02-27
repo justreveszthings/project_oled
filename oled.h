@@ -16,7 +16,7 @@ About: 		A multifunctional driver for oled displays,
 */
 
 void oled_init(void);
-void set_display(unsigned char d);	//1-on, or 0-off
+void oled_sdisplay(unsigned char d);	//1-on, or 0-off
 
 
 #endif // OLED_H_
