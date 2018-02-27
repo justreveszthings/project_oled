@@ -20,28 +20,28 @@ About: 		A multifunctional driver for oled displays,
 }*/
 void oled_init(void){
 	unsigned char i;
-        //oledpin_init();	//initialize for yourself
+        //oledpin_init();		//initialize for yourself
         pinset_scl_high();
         pinset_rst_low();    	
         delay_ms(50);
         pinset_rst_high();
 	oled_display(0x00);		// Display Off (0x00/0x01)
-	oled_clk(0x80);		// Set Clock as 100 Frames/Sec
+	oled_clk(0x80);			// Set Clock as 100 Frames/Sec
 	oled_multiplex_ratio(0x3F);	// 1/64 Duty (0x0F~0x3F)
-	oled_offset(0x00);	// Shift Mapping RAM Counter (0x00~0x3F)
+	oled_offset(0x00);		// Shift Mapping RAM Counter (0x00~0x3F)
 	oled_startline(0x00);		// Set Mapping RAM Display Start Line (0x00~0x3F)
 	oled_charge_pump(0x04);		// Enable Embedded DC/DC Converter (0x00/0x04)
 	oled_addressing_mode(0x02);	// Set Page Addressing Mode (0x00/0x01/0x02)
 	oled_segment_remap(0x01);	// Set SEG/Column Mapping  
-	oled_common_remap(0x08);	  	// Set COM/Row Scan Direction 
+	oled_common_remap(0x08);	// Set COM/Row Scan Direction 
 	oled_common_config(0x10);	// Set Sequential Configuration (0x00/0x10)
 	oled_contrast_controll(0xCF);	// Set SEG Output Current
 	oled_precharge_period(0xF1);	// Set Pre-Charge as 15 Clocks & Discharge as 1 Clock
 	oled_VCOMH(0x40);		// Set VCOM Deselect Level
 	oled_entire_display(0x00);	// Disable Entire Display On (0x00/0x01)
 	oled_inverse_display(0x00);	// Disable Inverse Display On (0x00/0x01)  
-	oled_display(0x01);	// Display On (0x00/0x01)
-	oled_fill(0x00);                 //clear all
+	oled_display(0x01);		// Display On (0x00/0x01)
+	oled_fill(0x00);                //clear all
 	oled_setpos(0,0); 	
 }
 void oled_write_data(unsigned char data)   
@@ -61,7 +61,7 @@ void oled_write_data(unsigned char data)
 			pinset_sda_low();
 		}
                 pinset_scl_high();
-		delay_ms(1);		//??asm("nop");   
+		__asm("nop");   	//one cycle time
                 pinset_scl_low();
 		data <<= 1;    
 	}
@@ -80,7 +80,7 @@ void oled_write_command(unsigned char cmd){
                 	pinset_sda_low();
 		}
 		pinset_scl_high();
-                delay_ms(1);		//??asm("nop");  
+                __asm("nop");   	//one cycle time
               	pinset_scl_low();
 		cmd <<= 1;   
 	} 	
