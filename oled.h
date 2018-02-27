@@ -9,6 +9,7 @@ About: 		A multifunctional driver for oled displays,
 
 #ifndef OLED_H_
 #define OLED_H_
+#include "usrdef.h"
 /*
 #define Led_Toggle() do{ LATB0= ~LATB0; }while(0)
 #define LED_SetLow() do { LATB0 = 0; } while (0)

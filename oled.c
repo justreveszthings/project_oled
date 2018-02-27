@@ -22,11 +22,11 @@ void LED_Init(void){
 	unsigned char i;
         LEDPIN_Init();
 
-        digitalWrite(SCL_PIN,HIGH);
-        digitalWrite(RST_PIN,LOW);
+        pinset_scl_high();
+        pinset_rst_low();
 //	for(i=0;i<100;i++)asm("nop");     	
         LED_DLY_ms(50);
-        digitalWrite(RST_PIN,HIGH);
+        pinset_rst_high();
 	Set_Display_On_Off(0x00);	// Display Off (0x00/0x01)
 	Set_Display_Clock(0x80);	// Set Clock as 100 Frames/Sec
 	Set_Multiplex_Ratio(0x3F);	// 1/64 Duty (0x0F~0x3F)
@@ -50,25 +50,21 @@ void LED_WrDat(unsigned char data)
 {
 	unsigned char i = 8;
 	//LED_CS=0;
-	//LED_DCH;;;
-        digitalWrite(DC_PIN,HIGH);
-	//LED_SCLL;;; 
-        digitalWrite(SCL_PIN,LOW);
+        pinset_dc_high(); 
+        pinset_scl_low();
 	while (i--)
 	{
 		if (data & 0x80)
 		{
-			digitalWrite(SDA_PIN,HIGH);;;;
+			pinset_sda_high();
 		}
 		else
 		{
-			digitalWrite(SDA_PIN,LOW);;;
+			pinset_sda_low();
 		}
-		//LED_SCLH;;; 
-                digitalWrite(SCL_PIN,HIGH);;;
-		asm("nop");;;     
-		//LED_SCLL;;;
-                digitalWrite(SCL_PIN,LOW);
+                pinset_scl_high();
+		asm("nop");   
+                pinset_scl_low();
 		data <<= 1;    
 	}
 	//LED_CS=1;
@@ -76,24 +72,18 @@ void LED_WrDat(unsigned char data)
 void LED_WrCmd(unsigned char cmd){
 	unsigned char i = 8;
 	//LED_CS = 0;
-	//LED_DCL;;;
-        digitalWrite(DC_PIN,LOW);
-	//LED_SCLL;;;
-	digitalWrite(SCL_PIN,LOW);
+        pinset_dc_low();
+	pinset_scl_low();
         while (i--){
 		if (cmd & 0x80){
-			//LED_SDAH;;;
-                	digitalWrite(SDA_PIN,HIGH);
+                	pinset_sda_high();
 		}
 		else{
-			//LED_SDAL;;;
-                	digitalWrite(SDA_PIN,LOW);
+                	pinset_sda_low();
 		}
-		//LED_SCLH;;;
-		digitalWrite(SCL_PIN,HIGH);
+		pinset_scl_high();
                 asm("nop");
-		//LED_SCLL;
-                digitalWrite(SCL_PIN,LOW);
+              	pinset_scl_low();
 		cmd <<= 1;   
 	} 	
 	//LED_CS = 1;
@@ -193,8 +183,7 @@ void LED_Set_Pos(unsigned char x, unsigned char y){
 	LED_WrCmd(((x&0xf0)>>4)|0x10);
 	LED_WrCmd((x&0x0f)|0x00); 
 } 
-void LED_PrintBMP(unsigned char x0,unsigned char y0,unsigned char x1,unsigned char y1,unsigned char bmp[])
-{ 	
+void LED_PrintBMP(unsigned char x0,unsigned char y0,unsigned char x1,unsigned char y1,unsigned char bmp[]){ 	
 	int ii=0;
 	unsigned char x,y;
 	for(y=y0;y<=y1;y++)
