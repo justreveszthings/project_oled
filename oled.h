@@ -15,8 +15,8 @@ About: 		A multifunctional driver for oled displays,
 #define LED_SetLow() do { LATB0 = 0; } while (0)
 */
 
-void LEDPIN_Init(void);
-void LED_Init(void);
+void oled_init(void);
+void set_display(unsigned char d);	//1-on, or 0-off
 
 
 #endif // OLED_H_

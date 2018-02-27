@@ -8,7 +8,7 @@ About: 		A multifunctional driver for oled displays,
 #############################################################################*/
 
 #include "oled.h"
-void LEDPIN_Init(void){
+void oledpin_init(void){
 	/* LED_SCL_Init;
 	LED_SDA_Init;
 	LED_RST_Init;
@@ -18,14 +18,13 @@ void LEDPIN_Init(void){
 	pinMode(RST_PIN,OUTPUT);
 	pinMode(DC_PIN,OUTPUT);
 }
-void LED_Init(void){
+void oled_init(void){
 	unsigned char i;
-        LEDPIN_Init();
+        oledpin_init();
 
         pinset_scl_high();
-        pinset_rst_low();
-//	for(i=0;i<100;i++)asm("nop");     	
-        LED_DLY_ms(50);
+        pinset_rst_low();    	
+        delay_ms(50);
         pinset_rst_high();
 	Set_Display_On_Off(0x00);	// Display Off (0x00/0x01)
 	Set_Display_Clock(0x80);	// Set Clock as 100 Frames/Sec
@@ -49,7 +48,7 @@ void LED_Init(void){
 void LED_WrDat(unsigned char data)   
 {
 	unsigned char i = 8;
-	//LED_CS=0;
+	pinset_cs_low();
         pinset_dc_high(); 
         pinset_scl_low();
 	while (i--)
@@ -63,15 +62,15 @@ void LED_WrDat(unsigned char data)
 			pinset_sda_low();
 		}
                 pinset_scl_high();
-		asm("nop");   
+		delay_ms(1);		//??asm("nop");   
                 pinset_scl_low();
 		data <<= 1;    
 	}
-	//LED_CS=1;
+	pinset_cs_high();
 }
 void LED_WrCmd(unsigned char cmd){
 	unsigned char i = 8;
-	//LED_CS = 0;
+	pinset_cs_low();
         pinset_dc_low();
 	pinset_scl_low();
         while (i--){
@@ -82,13 +81,13 @@ void LED_WrCmd(unsigned char cmd){
                 	pinset_sda_low();
 		}
 		pinset_scl_high();
-                asm("nop");
+                delay_ms(1);		//??asm("nop");  
               	pinset_scl_low();
 		cmd <<= 1;   
 	} 	
-	//LED_CS = 1;
+	pinset_cs_high();
 }
-void Set_Display_On_Off(unsigned char d){
+void set_display(unsigned char d){
 	LED_WrCmd(0xAE|d);		// Set Display On/Off
 					// Default => 0xAE
 					// 0xAE (0x00) => Display Off
@@ -195,4 +194,3 @@ void LED_PrintBMP(unsigned char x0,unsigned char y0,unsigned char x1,unsigned ch
 		}
 	}
 }
-
